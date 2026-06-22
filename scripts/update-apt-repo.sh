@@ -2,35 +2,42 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DOCS_DIR="${ROOT_DIR}/docs"
 SUITE="${1:-stable}"
-COMPONENT="main"
+COMPONENT="${2:-main}"
 ARCHES=("amd64" "arm64" "all")
-PACKAGE_DIR="${DOCS_DIR}/pool/main/g/gc-cameras-dkms"
-DEB_PATH="$("${ROOT_DIR}/scripts/build-deb.sh" "${ROOT_DIR}/build/deb")"
-DEB_NAME="$(basename "${DEB_PATH}")"
-REPO_DEB="${PACKAGE_DIR}/${DEB_NAME}"
+DIST_DIR="${ROOT_DIR}/dists/${SUITE}"
+POOL_DIR="${ROOT_DIR}/pool"
 
-mkdir -p "${PACKAGE_DIR}"
-cp "${DEB_PATH}" "${REPO_DEB}"
+if ! find "${POOL_DIR}" -type f -name '*.deb' -print -quit >/dev/null 2>&1; then
+	echo "No .deb packages found under ${POOL_DIR}" >&2
+	exit 1
+fi
 
-make_packages_file() {
-	local arch="$1"
-	local binary_dir="${DOCS_DIR}/dists/${SUITE}/${COMPONENT}/binary-${arch}"
-	local packages="${binary_dir}/Packages"
-	local rel_deb="pool/main/g/gc-cameras-dkms/${DEB_NAME}"
-	local size md5 sha1 sha256
+package_arch() {
+	local deb="$1"
+	local tmp_control
+	tmp_control="$(mktemp)"
+	ar p "${deb}" control.tar.xz > "${tmp_control}.tar.xz"
+	tar -xOf "${tmp_control}.tar.xz" ./control > "${tmp_control}"
+	awk -F': ' '/^Architecture:/ {print $2}' "${tmp_control}"
+	rm -f "${tmp_control}" "${tmp_control}.tar.xz"
+}
 
-	mkdir -p "${binary_dir}"
-	size="$(stat -c '%s' "${REPO_DEB}")"
-	md5="$(md5sum "${REPO_DEB}" | awk '{print $1}')"
-	sha1="$(sha1sum "${REPO_DEB}" | awk '{print $1}')"
-	sha256="$(sha256sum "${REPO_DEB}" | awk '{print $1}')"
+write_package_stanza() {
+	local deb="$1"
+	local packages="$2"
+	local rel_deb="${deb#"${ROOT_DIR}/"}"
+	local tmp_control size md5 sha1 sha256
 
 	tmp_control="$(mktemp)"
-	ar p "${REPO_DEB}" control.tar.xz > "${tmp_control}.tar.xz"
+	ar p "${deb}" control.tar.xz > "${tmp_control}.tar.xz"
 	tar -xOf "${tmp_control}.tar.xz" ./control > "${tmp_control}"
-	cat "${tmp_control}" > "${packages}"
+	size="$(stat -c '%s' "${deb}")"
+	md5="$(md5sum "${deb}" | awk '{print $1}')"
+	sha1="$(sha1sum "${deb}" | awk '{print $1}')"
+	sha256="$(sha256sum "${deb}" | awk '{print $1}')"
+
+	cat "${tmp_control}" >> "${packages}"
 	{
 		printf 'Filename: %s\n' "${rel_deb}"
 		printf 'Size: %s\n' "${size}"
@@ -38,16 +45,27 @@ make_packages_file() {
 		printf 'SHA1: %s\n' "${sha1}"
 		printf 'SHA256: %s\n\n' "${sha256}"
 	} >> "${packages}"
+
 	rm -f "${tmp_control}" "${tmp_control}.tar.xz"
-	gzip -9cn "${packages}" > "${packages}.gz"
 }
 
 for arch in "${ARCHES[@]}"; do
-	make_packages_file "${arch}"
+	binary_dir="${DIST_DIR}/${COMPONENT}/binary-${arch}"
+	packages="${binary_dir}/Packages"
+	mkdir -p "${binary_dir}"
+	: > "${packages}"
+
+	while IFS= read -r deb; do
+		deb_arch="$(package_arch "${deb}")"
+		if [ "${deb_arch}" = "${arch}" ] || [ "${deb_arch}" = "all" ]; then
+			write_package_stanza "${deb}" "${packages}"
+		fi
+	done < <(find "${POOL_DIR}" -type f -name '*.deb' | sort)
+
+	gzip -9cn "${packages}" > "${packages}.gz"
 done
 
-release="${DOCS_DIR}/dists/${SUITE}/Release"
-mkdir -p "$(dirname "${release}")"
+release="${DIST_DIR}/Release"
 {
 	printf 'Origin: pdamonte\n'
 	printf 'Label: pdamonte-ppa\n'
@@ -56,27 +74,27 @@ mkdir -p "$(dirname "${release}")"
 	printf 'Date: %s\n' "$(LC_ALL=C date -Ru)"
 	printf 'Architectures: %s\n' "${ARCHES[*]}"
 	printf 'Components: %s\n' "${COMPONENT}"
-	printf 'Description: GC camera DKMS packages for Ubuntu\n'
+	printf 'Description: pdamonte Ubuntu APT repository\n'
 	printf 'MD5Sum:\n'
-	find "${DOCS_DIR}/dists/${SUITE}" -type f \( -name Packages -o -name Packages.gz \) | sort | while read -r file; do
-		rel="${file#"${DOCS_DIR}/dists/${SUITE}/"}"
+	find "${DIST_DIR}" -type f \( -name Packages -o -name Packages.gz \) | sort | while read -r file; do
+		rel="${file#"${DIST_DIR}/"}"
 		printf ' %s %16s %s\n' "$(md5sum "${file}" | awk '{print $1}')" "$(stat -c '%s' "${file}")" "${rel}"
 	done
 	printf 'SHA256:\n'
-	find "${DOCS_DIR}/dists/${SUITE}" -type f \( -name Packages -o -name Packages.gz \) | sort | while read -r file; do
-		rel="${file#"${DOCS_DIR}/dists/${SUITE}/"}"
+	find "${DIST_DIR}" -type f \( -name Packages -o -name Packages.gz \) | sort | while read -r file; do
+		rel="${file#"${DIST_DIR}/"}"
 		printf ' %s %16s %s\n' "$(sha256sum "${file}" | awk '{print $1}')" "$(stat -c '%s' "${file}")" "${rel}"
 	done
 } > "${release}"
 
-rm -f "${release}.gpg" "${DOCS_DIR}/dists/${SUITE}/InRelease"
+rm -f "${release}.gpg" "${DIST_DIR}/InRelease"
 if [ -n "${APT_REPO_GPG_KEY:-}" ]; then
-	gpg --batch --yes --local-user "${APT_REPO_GPG_KEY}" --clearsign --output "${DOCS_DIR}/dists/${SUITE}/InRelease" "${release}"
+	gpg --batch --yes --local-user "${APT_REPO_GPG_KEY}" --clearsign --output "${DIST_DIR}/InRelease" "${release}"
 	gpg --batch --yes --local-user "${APT_REPO_GPG_KEY}" --detach-sign --armor --output "${release}.gpg" "${release}"
-	gpg --batch --yes --local-user "${APT_REPO_GPG_KEY}" --export --output "${DOCS_DIR}/KEY.gpg"
+	gpg --batch --yes --local-user "${APT_REPO_GPG_KEY}" --export --output "${ROOT_DIR}/KEY.gpg"
 fi
 
-cat > "${DOCS_DIR}/index.html" <<EOF
+cat > "${ROOT_DIR}/index.html" <<EOF
 <!doctype html>
 <html lang="en">
 <head>
@@ -85,10 +103,10 @@ cat > "${DOCS_DIR}/index.html" <<EOF
 </head>
 <body>
   <h1>pdamonte APT repository</h1>
-  <p>Ubuntu DKMS package for GC5035 and GC8034 Intel IPU6 cameras.</p>
+  <p>Ubuntu packages published by pdamonte.</p>
   <pre>deb [trusted=yes] https://pdamonte.github.io/ppa ${SUITE} ${COMPONENT}</pre>
 </body>
 </html>
 EOF
 
-find "${DOCS_DIR}" -type f | sort
+find "${DIST_DIR}" "${POOL_DIR}" -type f | sort

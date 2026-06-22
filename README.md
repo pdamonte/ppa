@@ -1,74 +1,73 @@
 # pdamonte APT repository
 
-Static Ubuntu APT repository for GalaxyCore GC5035 / GCTI5035 and
-GC8034 / GCTI8034 camera drivers on Intel IPU6 systems.
+Static Ubuntu APT repository served from GitHub Pages.
 
-The published package is:
+Repository URL:
 
-- `gc-cameras-dkms`: installs DKMS sources for `gti5035`, `gc8034` and the
-  patched `ipu_bridge` module.
+```text
+https://pdamonte.github.io/ppa
+```
 
-## Install
-
-Once GitHub Pages is enabled for this repository:
+Install on Ubuntu:
 
 ```sh
-sudo install -d -m 0755 /etc/apt/sources.list.d
 echo "deb [trusted=yes] https://pdamonte.github.io/ppa stable main" | sudo tee /etc/apt/sources.list.d/pdamonte-ppa.list
 sudo apt update
 sudo apt install gc-cameras-dkms
 ```
 
-`trusted=yes` is used because this repository is currently generated without a
-GPG signing key. For production use, sign `Release` with a repository key and
-install that key on the target system instead of using `trusted=yes`.
+This repository intentionally contains only published package artifacts and APT
+metadata. Driver sources live in the driver repositories.
 
-## Repository layout
-
-The APT repository is generated under `docs/` so GitHub Pages can serve it:
+## Standard APT Layout
 
 ```text
-docs/
-  dists/stable/main/binary-amd64/Packages
-  dists/stable/main/binary-arm64/Packages
-  dists/stable/main/binary-all/Packages
-  pool/main/g/gc-cameras-dkms/gc-cameras-dkms_0.1.1-1_all.deb
+.
+├── dists/
+│   └── stable/
+│       ├── Release
+│       └── main/
+│           ├── binary-all/
+│           │   ├── Packages
+│           │   └── Packages.gz
+│           ├── binary-amd64/
+│           │   ├── Packages
+│           │   └── Packages.gz
+│           └── binary-arm64/
+│               ├── Packages
+│               └── Packages.gz
+├── pool/
+│   └── main/
+│       └── g/
+│           └── gc-cameras-dkms/
+│               └── gc-cameras-dkms_0.1.1-1_all.deb
+├── index.html
+└── scripts/
+    └── update-apt-repo.sh
 ```
 
-## Update the APT repo
+## Update Metadata
+
+After adding or replacing `.deb` files under `pool/`, regenerate the repository
+metadata:
 
 ```sh
-./scripts/update-apt-repo.sh stable
-git add .
-git commit -m "Update APT repository"
-git push
+./scripts/update-apt-repo.sh stable main
 ```
+
+Then commit and push the updated `dists/`, `pool/` and `index.html` files.
 
 If `APT_REPO_GPG_KEY` is set to a local GPG key id, the script also writes
 `InRelease`, `Release.gpg` and `KEY.gpg`.
 
-## Package source layout
+## Package Sources
 
-```text
-.
-├── dkms.conf
-├── Makefile
-├── src/
-├── tools/
-└── debian/
-    ├── control
-    ├── rules
-    ├── changelog
-    ├── compat
-    └── install
-```
+- <https://github.com/pdamonte/gc5035-dkms> - GC5035 / GCTI5035 DKMS package source.
+- <https://github.com/pdamonte/gc8034-dkms> - GC8034 / GCTI8034 DKMS package source.
+- <https://github.com/pdamonte/ipu-bridge-gc-cameras-akmod> - Fedora akmods package source for the patched IPU bridge.
 
-## Related repositories
+## Signing
 
-- <https://github.com/pdamonte/gc5035-dkms> - standalone GC5035 / GCTI5035 DKMS package.
-- <https://github.com/pdamonte/gc8034-dkms> - standalone GC8034 / GCTI8034 DKMS package.
-- <https://github.com/pdamonte/ipu-bridge-gc-cameras-akmod> - Fedora akmods package for the patched IPU bridge.
-
-## License
-
-GPL-2.0-only.
+This repository is currently unsigned, so the install example uses
+`[trusted=yes]`. For production use, sign the repository metadata and use an
+APT source with `signed-by=...` instead.

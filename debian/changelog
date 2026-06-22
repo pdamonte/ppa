@@ -1,5 +1,0 @@
-gc-cameras-dkms (0.1.1~noble1) noble; urgency=medium
-
-  * Initial PPA source package for GC5035, GC8034 and IPU bridge DKMS modules.
-
- -- pdamonte <pdamonte@users.noreply.github.com>  Mon, 22 Jun 2026 00:00:00 -0300

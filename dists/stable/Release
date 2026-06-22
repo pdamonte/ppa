@@ -2,10 +2,10 @@ Origin: pdamonte
 Label: pdamonte-ppa
 Suite: stable
 Codename: stable
-Date: Mon, 22 Jun 2026 03:14:53 +0000
+Date: Mon, 22 Jun 2026 03:20:50 +0000
 Architectures: amd64 arm64 all
 Components: main
-Description: GC camera DKMS packages for Ubuntu
+Description: pdamonte Ubuntu APT repository
 MD5Sum:
  0a064206f8442d239096a8f82bd8c220              800 main/binary-all/Packages
  e8a7221276788ed1912745fc34059ad3              528 main/binary-all/Packages.gz
