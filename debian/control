@@ -1,0 +1,24 @@
+Source: gc-cameras-dkms
+Section: kernel
+Priority: optional
+Maintainer: pdamonte <pdamonte@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/pdamonte/ppa
+
+Package: gc-cameras-dkms
+Architecture: all
+Depends:
+ dkms,
+ gcc,
+ make,
+ linux-headers-generic | linux-headers-amd64,
+ v4l-utils,
+ python3,
+ python3-pil,
+ ${misc:Depends}
+Description: DKMS drivers for GC5035 and GC8034 Intel IPU6 cameras
+ DKMS source package for GalaxyCore GCTI5035 and GCTI8034 camera sensors
+ on Intel IPU6 systems. It builds the gti5035, gc8034 and patched ipu_bridge
+ kernel modules for the installed kernel.

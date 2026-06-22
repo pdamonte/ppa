@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ "${1}" = "purge" ]; then
+	rm -rf /usr/src/gc-cameras-0.1.1
+fi
+
+#DEBHELPER#
+
+exit 0

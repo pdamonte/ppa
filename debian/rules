@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+DKMS_NAME = gc-cameras
+DKMS_VERSION = 0.1.1
+DKMS_DIR = debian/gc-cameras-dkms/usr/src/$(DKMS_NAME)-$(DKMS_VERSION)
+
+%:
+	dh $@
+
+override_dh_auto_build:
+
+override_dh_auto_test:
+
+override_dh_auto_install:
+	install -d $(DKMS_DIR)
+	install -m 0644 Makefile dkms.conf gti5035.c gc8034.c ipu-bridge.c $(DKMS_DIR)/
+	install -d $(DKMS_DIR)/include/linux
+	install -m 0644 include/linux/rk-camera-module.h $(DKMS_DIR)/include/linux/
+	install -d $(DKMS_DIR)/tools
+	install -m 0755 tools/capture-gc5035.sh tools/capture-gc8034.sh tools/detect-camera-pipeline.py $(DKMS_DIR)/tools/
+	install -d debian/gc-cameras-dkms/etc/modules-load.d
+	printf 'gti5035\ngc8034\nintel_ipu6_isys\n' > debian/gc-cameras-dkms/etc/modules-load.d/gc-cameras.conf

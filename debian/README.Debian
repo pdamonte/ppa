@@ -1,0 +1,8 @@
+gc-cameras-dkms for Ubuntu
+--------------------------
+
+This package installs DKMS sources for the gti5035, gc8034 and patched
+ipu_bridge modules under /usr/src/gc-cameras-0.1.1.
+
+The modules are built locally by DKMS for the installed kernel during package
+installation and on future kernel updates.

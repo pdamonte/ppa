@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+DKMS_NAME="gc-cameras"
+DKMS_VERSION="0.1.1"
+
+if command -v dkms >/dev/null 2>&1; then
+	dkms remove -m "${DKMS_NAME}" -v "${DKMS_VERSION}" --all || true
+fi
+
+#DEBHELPER#
+
+exit 0
