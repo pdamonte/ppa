@@ -17,7 +17,7 @@ sudo apt install gc-cameras-dkms
 ```
 
 This repository intentionally contains only published package artifacts and APT
-metadata. Driver sources live in the driver repositories.
+metadata. Package and driver sources live in separate source repositories.
 
 ## Standard APT Layout
 
@@ -62,6 +62,7 @@ If `APT_REPO_GPG_KEY` is set to a local GPG key id, the script also writes
 
 ## Package Sources
 
+- <https://github.com/pdamonte/gc-cameras-ubuntu-dkms> - combined Ubuntu DKMS package source for the published `gc-cameras-dkms` package.
 - <https://github.com/pdamonte/gc5035-dkms> - GC5035 / GCTI5035 DKMS package source.
 - <https://github.com/pdamonte/gc8034-dkms> - GC8034 / GCTI8034 DKMS package source.
 - <https://github.com/pdamonte/ipu-bridge-gc-cameras-akmod> - Fedora akmods package source for the patched IPU bridge.

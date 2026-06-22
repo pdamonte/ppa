@@ -2,21 +2,21 @@ Origin: pdamonte
 Label: pdamonte-ppa
 Suite: stable
 Codename: stable
-Date: Mon, 22 Jun 2026 03:20:50 +0000
+Date: Mon, 22 Jun 2026 03:31:39 +0000
 Architectures: amd64 arm64 all
 Components: main
 Description: pdamonte Ubuntu APT repository
 MD5Sum:
- 0a064206f8442d239096a8f82bd8c220              800 main/binary-all/Packages
- e8a7221276788ed1912745fc34059ad3              528 main/binary-all/Packages.gz
- 0a064206f8442d239096a8f82bd8c220              800 main/binary-amd64/Packages
- e8a7221276788ed1912745fc34059ad3              528 main/binary-amd64/Packages.gz
- 0a064206f8442d239096a8f82bd8c220              800 main/binary-arm64/Packages
- e8a7221276788ed1912745fc34059ad3              528 main/binary-arm64/Packages.gz
+ b75a1790144fa055f53562ea8c53b70b              819 main/binary-all/Packages
+ 0b0dd7c763a91e26f390c93c05d83aef              534 main/binary-all/Packages.gz
+ b75a1790144fa055f53562ea8c53b70b              819 main/binary-amd64/Packages
+ 0b0dd7c763a91e26f390c93c05d83aef              534 main/binary-amd64/Packages.gz
+ b75a1790144fa055f53562ea8c53b70b              819 main/binary-arm64/Packages
+ 0b0dd7c763a91e26f390c93c05d83aef              534 main/binary-arm64/Packages.gz
 SHA256:
- 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-all/Packages
- 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-all/Packages.gz
- 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-amd64/Packages
- 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-amd64/Packages.gz
- 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-arm64/Packages
- 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-arm64/Packages.gz
+ dd001da2f584f16cb39d7c298b0a29a85c005ece189c2692ff769cdb38b07909              819 main/binary-all/Packages
+ ee53d07008d8f87ce7e280d4bd9a02c78f2efc238d83d539832755017c1eccdd              534 main/binary-all/Packages.gz
+ dd001da2f584f16cb39d7c298b0a29a85c005ece189c2692ff769cdb38b07909              819 main/binary-amd64/Packages
+ ee53d07008d8f87ce7e280d4bd9a02c78f2efc238d83d539832755017c1eccdd              534 main/binary-amd64/Packages.gz
+ dd001da2f584f16cb39d7c298b0a29a85c005ece189c2692ff769cdb38b07909              819 main/binary-arm64/Packages
+ ee53d07008d8f87ce7e280d4bd9a02c78f2efc238d83d539832755017c1eccdd              534 main/binary-arm64/Packages.gz
