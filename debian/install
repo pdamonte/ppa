@@ -1,0 +1,4 @@
+Makefile usr/src/gc-cameras-0.1.1/
+dkms.conf usr/src/gc-cameras-0.1.1/
+src usr/src/gc-cameras-0.1.1/
+tools usr/src/gc-cameras-0.1.1/

@@ -1,0 +1,22 @@
+Origin: pdamonte
+Label: pdamonte-ppa
+Suite: stable
+Codename: stable
+Date: Mon, 22 Jun 2026 03:14:53 +0000
+Architectures: amd64 arm64 all
+Components: main
+Description: GC camera DKMS packages for Ubuntu
+MD5Sum:
+ 0a064206f8442d239096a8f82bd8c220              800 main/binary-all/Packages
+ e8a7221276788ed1912745fc34059ad3              528 main/binary-all/Packages.gz
+ 0a064206f8442d239096a8f82bd8c220              800 main/binary-amd64/Packages
+ e8a7221276788ed1912745fc34059ad3              528 main/binary-amd64/Packages.gz
+ 0a064206f8442d239096a8f82bd8c220              800 main/binary-arm64/Packages
+ e8a7221276788ed1912745fc34059ad3              528 main/binary-arm64/Packages.gz
+SHA256:
+ 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-all/Packages
+ 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-all/Packages.gz
+ 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-amd64/Packages
+ 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-amd64/Packages.gz
+ 51289342ea98234c8bbc6ad381237888019384db0bc59ed7e7bfc61080e16bb1              800 main/binary-arm64/Packages
+ 2cfc8f761686e2260d7c58be2ddccd7467a12a5e60378427c481474412fa57db              528 main/binary-arm64/Packages.gz
