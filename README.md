@@ -1,10 +1,8 @@
 # pdamonte APT repository
 
-> **Note:** the drivers packaged here do not build on kernel 7.2+
-> (`linux/of_gpio.h` was removed in `gti5035`) and report front/rear facing
-> swapped on the Chuwi Hi10 Max. Updated sources live in
-> [gc-cameras-akmod](https://github.com/pdamonte/gc-cameras-akmod)
-> (`src/gc-cameras-0.2/`); Fedora users should install that package instead.
+> `gc-cameras-dkms` 0.2.0 builds on kernel 7.2+ and reports the correct front/rear
+> facing on the Chuwi Hi10 Max. Fedora users should use
+> [gc-cameras-akmod](https://github.com/pdamonte/gc-cameras-akmod) instead.
 
 Static Ubuntu APT repository served from GitHub Pages.
 
@@ -46,7 +44,8 @@ metadata. Package and driver sources live in separate source repositories.
 │   └── main/
 │       └── g/
 │           └── gc-cameras-dkms/
-│               └── gc-cameras-dkms_0.1.1-1_all.deb
+│               ├── gc-cameras-dkms_0.1.1-1_all.deb
+│               └── gc-cameras-dkms_0.2.0-1_all.deb
 ├── index.html
 └── scripts/
     └── update-apt-repo.sh
